@@ -2,7 +2,12 @@ import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
 
-const dataDirectory = path.join(process.cwd(), 'data')
+// On Vercel, the filesystem is read-only except for /tmp.
+// Locally, we write to the project's data/ directory for easy inspection.
+const dataDirectory = process.env.VERCEL
+  ? '/tmp'
+  : path.join(process.cwd(), 'data')
+
 const csvPath = path.join(dataDirectory, 'submissions.csv')
 const header = 'timestamp,email,password,password_length,status\n'
 
